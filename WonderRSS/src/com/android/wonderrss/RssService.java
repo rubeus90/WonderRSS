@@ -20,20 +20,19 @@ import android.text.Html;
 import android.text.Spanned;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
-import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
 public class RssService	extends AsyncTask<String, Void, Feed> {
 	
 	private Activity activity;
-	private ListView listView;
+	private ArticleListFragment fragment;
 	private RssParser theRSSHandler;
 	private ListAdapter adapter;
 	private ProgressDialog progress;
 
-	public RssService(Activity activity, ListView listView) {
-		this.activity = activity;
-		this.listView = listView;		
+	public RssService(ArticleListFragment fragment) {	
+		this.fragment = fragment;
+		activity = fragment.getActivity();
 	}
 
 	public void onPreExecute() {
@@ -61,18 +60,18 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
 							android.R.layout.simple_list_item_2, new String[] {
 									"title", "description" }, new int[] {
 									android.R.id.text1, android.R.id.text2 });
-					listView.setAdapter(adapter);
+					fragment.setListAdapter(adapter);
 				}		
 				else{
 					List<String> message = new ArrayList<String>();
 					if(!isConnectedToInternet()){
 						message.add(activity.getResources().getString(R.string.wrong_url));
 						adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, message);
-						listView.setAdapter(adapter);
+						fragment.setListAdapter(adapter);
 					}
 					message.add(activity.getResources().getString(R.string.network_error));
 					adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, message);
-					listView.setAdapter(adapter);
+					fragment.setListAdapter(adapter);
 				}
 			}
 		});

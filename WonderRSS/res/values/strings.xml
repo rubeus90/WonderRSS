@@ -10,5 +10,6 @@
     <string name="downloading">Downloading &#8230;</string>
     <string name="url">Enter URL here</string>
     <string name="no_rss">No RSS feed added</string>
+    <string name="no_data">No data available</string>
 
 </resources>
