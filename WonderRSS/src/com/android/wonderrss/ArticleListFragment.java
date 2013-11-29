@@ -3,6 +3,7 @@ package com.android.wonderrss;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -16,14 +17,32 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 
-public class ArticleListFragment extends ListFragment {
+public class ArticleListFragment extends ListFragment{
 	private String url;
 	private RssService rss;
 	private EditText editURL;
 	private MenuItem addItem;
-	InputMethodManager keyboard;
+	private InputMethodManager keyboard;
+	private OnListItemClickListener listener;
 	
+	public interface OnListItemClickListener {
+        public void onItemClick(int position);
+    }
+	
+	@Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            listener = (OnListItemClickListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()+ " must implement OnListItemClickListener");
+        }
+    }
 	
 	public ArticleListFragment() {
     	setHasOptionsMenu(true);	
@@ -46,7 +65,14 @@ public class ArticleListFragment extends ListFragment {
 
 		fetchFeed();
 
-		keyboard = (InputMethodManager) getActivity().getSystemService(MainActivity.INPUT_METHOD_SERVICE);
+		keyboard = (InputMethodManager) getActivity().getSystemService(MainActivity.INPUT_METHOD_SERVICE);		
+	}
+	
+	@Override
+	public void onListItemClick (ListView l, View v, int position, long id){
+		super.onListItemClick(l, v, position, id);
+		
+		listener.onItemClick(position);
 	}
 
 	@Override
@@ -68,6 +94,7 @@ public class ArticleListFragment extends ListFragment {
 					rss.execute(url);
 					addItem.collapseActionView();
 					editURL.setActivated(false);
+					editURL.setText("");
 					keyboard.toggleSoftInput(
 							InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 				}

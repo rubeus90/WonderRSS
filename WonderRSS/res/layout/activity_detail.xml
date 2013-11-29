@@ -5,8 +5,8 @@
     android:layout_height="match_parent">
     
     <fragment 
-        android:name="com.android.wonderrss.ArticleListFragment"
-        android:id="@+id/listfragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:name="com.android.wonderrss.ArticleDetailFragment"
+        android:id="@+id/detailfragment"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"/>
 </LinearLayout>

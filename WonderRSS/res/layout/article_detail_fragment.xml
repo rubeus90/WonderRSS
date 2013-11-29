@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="10dp" >
+    
+    <TextView 
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="35sp"
+        android:text="Ici c'est le futur titre de l'article"/>
+    
+    <TextView 
+        android:id="@+id/pubDate" 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        android:text="C'est la date de publication"/>
+    
+    <TextView 
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:paddingTop="15dp"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pulvinar tempus augue quis rutrum. Integer ullamcorper tellus non nunc sagittis, in viverra metus vehicula. Proin hendrerit in purus a varius. Fusce rhoncus ultrices faucibus. Pellentesque non mi purus. Curabitur id lobortis neque, ut adipiscing sapien. Phasellus a nunc porta, sollicitudin velit vitae, dictum lectus. Integer purus sem, vulputate imperdiet pulvinar eleifend, posuere quis nunc. Nulla elementum libero sed libero accumsan hendrerit. Proin eget convallis diam. Curabitur sit amet purus placerat, ornare ipsum non, consectetur nibh. Praesent gravida turpis eu tempor malesuada. Integer faucibus vehicula turpis, sit amet vulputate ipsum blandit."/>
+</LinearLayout>
