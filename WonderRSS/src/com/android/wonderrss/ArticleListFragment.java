@@ -1,8 +1,5 @@
 package com.android.wonderrss;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.ListFragment;
 import android.os.Bundle;
@@ -14,9 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 public class ArticleListFragment extends ListFragment{
@@ -65,7 +60,7 @@ public class ArticleListFragment extends ListFragment{
 
 		fetchFeed();
 
-		keyboard = (InputMethodManager) getActivity().getSystemService(MainActivity.INPUT_METHOD_SERVICE);		
+		keyboard = (InputMethodManager) getActivity().getSystemService(MainActivity.INPUT_METHOD_SERVICE);
 	}
 	
 	@Override
@@ -95,8 +90,6 @@ public class ArticleListFragment extends ListFragment{
 					addItem.collapseActionView();
 					editURL.setActivated(false);
 					editURL.setText("");
-					keyboard.toggleSoftInput(
-							InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 				}
 				return true;
 			}
@@ -132,15 +125,7 @@ public class ArticleListFragment extends ListFragment{
 	}
 
 	public void fetchFeed() {
-		if (url == null) {
-			List<String> message = new ArrayList<String>();
-			message.add(getResources().getString(R.string.no_rss));
-			ListAdapter adapter = new ArrayAdapter<String>(getActivity(),
-					android.R.layout.simple_list_item_1, message);
-			this.setListAdapter(adapter);
-		} else {
-			rss = new RssService(this);
-			rss.execute(url);
-		}
+		rss = new RssService(this);
+		rss.execute(url);			
 	}
 }

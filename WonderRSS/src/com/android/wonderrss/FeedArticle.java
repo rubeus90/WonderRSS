@@ -2,7 +2,6 @@ package com.android.wonderrss;
 
 public class FeedArticle {
 	private String title;
-	private String description;
 	private String author;
 	private String pubDate;
 	private String guid;
@@ -12,12 +11,6 @@ public class FeedArticle {
 	}
 	public void setTitle(String title) {
 		this.title = title;
-	}
-	public String getDescription() {
-		return description;
-	}
-	public void setDescription(String description) {
-		this.description = description;
 	}
 	public String getAuthor() {
 		return author;

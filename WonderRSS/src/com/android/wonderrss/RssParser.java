@@ -23,9 +23,6 @@ public class RssParser extends DefaultHandler{
 		if(localName.equalsIgnoreCase("title")){
 			currentArticle.setTitle(buffer.toString());
 		}
-		else if(localName.equalsIgnoreCase("description")){
-			currentArticle.setDescription(buffer.toString());
-		}
 		else if(localName.equalsIgnoreCase("author")){
 			currentArticle.setAuthor(buffer.toString());
 		}
@@ -35,7 +32,7 @@ public class RssParser extends DefaultHandler{
 		else if(localName.equalsIgnoreCase("guid")){
 			currentArticle.setGuid(buffer.toString());
 		}
-		else if(localName.equalsIgnoreCase("content")){
+		else if(localName.equalsIgnoreCase("content") || localName.equalsIgnoreCase("description")){
 			currentArticle.setContent(buffer.toString());
 		}
 		

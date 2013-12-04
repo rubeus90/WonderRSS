@@ -10,4 +10,10 @@ public class DetailActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);                
     }
+	
+	public int getPosition(){
+		Bundle bundle = getIntent().getExtras();
+
+        return bundle.getInt("position");
+	}
 }

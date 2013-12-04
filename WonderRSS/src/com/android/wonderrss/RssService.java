@@ -18,7 +18,6 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.text.Spanned;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 
@@ -29,6 +28,7 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
 	private RssParser theRSSHandler;
 	private ListAdapter adapter;
 	private ProgressDialog progress;
+	static Feed stream;
 
 	public RssService(ArticleListFragment fragment) {	
 		this.fragment = fragment;
@@ -46,33 +46,20 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
 
 			@Override
 			public void run() {
-				if(feed != null){
-					List<FeedArticle> list = feed.getListe();
-					HashMap<String, Spanned> map;
-					List<HashMap<String, Spanned>> listMap = new ArrayList<HashMap<String, Spanned>>();
-					for (FeedArticle article : list) {
-						map = new HashMap<String, Spanned>();
-						map.put("title", Html.fromHtml(article.getTitle()));
-						map.put("description", Html.fromHtml(article.getDescription()));
-						listMap.add(map);
-					}
-					adapter = new SimpleAdapter(activity, listMap,
-							android.R.layout.simple_list_item_2, new String[] {
-									"title", "description" }, new int[] {
-									android.R.id.text1, android.R.id.text2 });
-					fragment.setListAdapter(adapter);
-				}		
-				else{
-					List<String> message = new ArrayList<String>();
-					if(!isConnectedToInternet()){
-						message.add(activity.getResources().getString(R.string.wrong_url));
-						adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, message);
-						fragment.setListAdapter(adapter);
-					}
-					message.add(activity.getResources().getString(R.string.network_error));
-					adapter = new ArrayAdapter<String>(activity, android.R.layout.simple_list_item_1, message);
-					fragment.setListAdapter(adapter);
+				List<FeedArticle> list = feed.getListe();					
+				HashMap<String, Spanned> map;
+				List<HashMap<String, Spanned>> listMap = new ArrayList<HashMap<String, Spanned>>();
+				for (FeedArticle article : list) {
+					map = new HashMap<String, Spanned>();
+					map.put("title", Html.fromHtml(article.getTitle()));
+					map.put("description", Html.fromHtml(article.getContent()));
+					listMap.add(map);
 				}
+				adapter = new SimpleAdapter(activity, listMap,
+						android.R.layout.simple_list_item_2, new String[] {
+								"title", "description" }, new int[] {
+								android.R.id.text1, android.R.id.text2 });
+				fragment.setListAdapter(adapter);	
 			}
 		});
 		
@@ -94,11 +81,12 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
             InputSource is=new InputSource(url.openStream());
             
             xmlreader.parse(is);
-            
-            return theRSSHandler.getFeed();
+            stream = theRSSHandler.getFeed();
+            return stream;
         } catch (Exception e) {
         	e.printStackTrace();
-            return null;
+        	stream = new Feed();
+            return stream;
         }
 	}
 	
