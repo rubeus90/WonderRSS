@@ -12,16 +12,19 @@
 		android:id="@id/android:list"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:paddingLeft="5dp"
-		android:paddingRight="5dp"
-		android:paddingBottom="5dp"
-		android:layout_margin="10dp"
 		android:background="@color/background">
 	</ListView>
 	
 	<TextView 
 	    android:id="@id/android:empty"
 	    android:layout_width="fill_parent"
-	    android:layout_height="fill_parent"/>
+	    android:layout_height="fill_parent"
+	    android:text="@string/no_rss"/>
  
 </LinearLayout>
+
+
+<!-- 		android:paddingLeft="5dp" -->
+<!-- 		android:paddingRight="5dp" -->
+<!-- 		android:paddingBottom="5dp" -->
+<!-- 		android:layout_margin="10dp" -->

@@ -55,10 +55,11 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
 					map.put("description", Html.fromHtml(article.getContent()));
 					listMap.add(map);
 				}
-				adapter = new SimpleAdapter(activity, listMap,
-						android.R.layout.simple_list_item_2, new String[] {
-								"title", "description" }, new int[] {
-								android.R.id.text1, android.R.id.text2 });
+//				adapter = new SimpleAdapter(activity, listMap,
+//						android.R.layout.simple_list_item_2, new String[] {
+//								"title", "description" }, new int[] {
+//								android.R.id.text1, android.R.id.text2 });
+				adapter = new CustomListAdapter(activity, listMap);
 				fragment.setListAdapter(adapter);	
 			}
 		});
