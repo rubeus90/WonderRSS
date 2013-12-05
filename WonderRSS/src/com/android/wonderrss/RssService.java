@@ -47,12 +47,12 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
 			@Override
 			public void run() {
 				List<FeedArticle> list = feed.getListe();					
-				HashMap<String, Spanned> map;
-				List<HashMap<String, Spanned>> listMap = new ArrayList<HashMap<String, Spanned>>();
+				HashMap<String, String> map;
+				List<HashMap<String, String>> listMap = new ArrayList<HashMap<String, String>>();
 				for (FeedArticle article : list) {
-					map = new HashMap<String, Spanned>();
-					map.put("title", Html.fromHtml(article.getTitle()));
-					map.put("description", Html.fromHtml(article.getContent()));
+					map = new HashMap<String, String>();
+					map.put("title", article.getTitle());
+					map.put("date", article.getPubDate() + " by " + article.getAuthor());
 					listMap.add(map);
 				}
 //				adapter = new SimpleAdapter(activity, listMap,

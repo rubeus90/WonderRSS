@@ -28,9 +28,12 @@ public class ArticleDetailFragment extends Fragment {
 		int position = bundle.getInt("position");
 		FeedArticle article = RssService.stream.getListe().get(position);
 		
+		//Supprimer tous les images dans le code HTML
+		String htmlBody = article.getContent().replaceAll("<img.+/(img)*>", "");
+		
 		title.setText(article.getTitle());
 		date.setText(article.getPubDate());
-		content.setText(Html.fromHtml(article.getContent()));
+		content.setText(Html.fromHtml(htmlBody));
 		
 		return view;
 	}

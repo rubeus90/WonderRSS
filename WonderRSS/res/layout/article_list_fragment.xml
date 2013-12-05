@@ -6,13 +6,17 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent"
 	android:orientation="vertical"
+	android:background="@color/card_background"
 	tools:context=".MainActivity" >
  
 	<ListView
 		android:id="@id/android:list"
 		android:layout_width="fill_parent"
 		android:layout_height="wrap_content"
-		android:background="@color/background">
+		android:layout_margin="10dp"
+		android:background="@color/background"
+		android:divider="@color/card_background"
+		android:dividerHeight="10dp">
 	</ListView>
 	
 	<TextView 
@@ -22,9 +26,3 @@
 	    android:text="@string/no_rss"/>
  
 </LinearLayout>
-
-
-<!-- 		android:paddingLeft="5dp" -->
-<!-- 		android:paddingRight="5dp" -->
-<!-- 		android:paddingBottom="5dp" -->
-<!-- 		android:layout_margin="10dp" -->
