@@ -9,7 +9,8 @@
         android:layout_height="100dp"
         android:contentDescription="@string/image_description"
         android:src="@drawable/photo"
-        android:padding="4dp"/>    
+        android:padding="4dp"
+        android:scaleType="centerCrop"/>    
         
     <TextView 
         android:id="@+id/list_title"

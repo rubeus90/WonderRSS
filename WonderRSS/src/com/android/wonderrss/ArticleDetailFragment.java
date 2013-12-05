@@ -33,7 +33,13 @@ public class ArticleDetailFragment extends Fragment {
 		
 		title.setText(article.getTitle());
 		date.setText(article.getPubDate());
-		content.setText(Html.fromHtml(htmlBody));
+		try{
+			content.setText(Html.fromHtml(htmlBody));
+		}
+		catch(Exception e){
+			e.getStackTrace();
+			content.setText("An error has occured. No content has been downloaded.");
+		}
 		
 		return view;
 	}
