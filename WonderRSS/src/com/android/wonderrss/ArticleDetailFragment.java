@@ -16,16 +16,18 @@ public class ArticleDetailFragment extends Fragment {
 	FeedArticle article;
 	TextView title, date, content;
 	ImageView thumbnail;
+	View view;
 
 	public ArticleDetailFragment() {
 		setHasOptionsMenu(true);
+		setRetainInstance(false);
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment	
-		View view = inflater.inflate(R.layout.article_detail_fragment, container, false);
+		view = inflater.inflate(R.layout.article_detail_fragment, container, false);
 		
 		title = (TextView) view.findViewById(R.id.title);
 		date = (TextView) view.findViewById(R.id.pubDate);
@@ -62,7 +64,7 @@ public class ArticleDetailFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 	}
 	
-	public void updateContent(int position){
+	public void updateContent(int position){		
 		article = RssService.stream.getListe().get(position);
 		
 		//Supprimer tous les images dans le code HTML
