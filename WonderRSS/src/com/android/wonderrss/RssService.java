@@ -16,10 +16,8 @@ import android.app.ProgressDialog;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.text.Html;
-import android.text.Spanned;
+import android.util.Log;
 import android.widget.ListAdapter;
-import android.widget.SimpleAdapter;
 
 public class RssService	extends AsyncTask<String, Void, Feed> {
 	
@@ -36,12 +34,14 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
 	}
 
 	public void onPreExecute() {
+		Log.v("Rss Service", "onPreExecute");
 		progress = new ProgressDialog(activity);
 		progress.setMessage(activity.getResources().getString(R.string.downloading));
 		progress.show();
 	}
 
 	public void onPostExecute(final Feed feed) {
+		Log.v("Rss Service", "onPostExecute");
 		activity.runOnUiThread(new Runnable() {
 
 			@Override
@@ -55,12 +55,9 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
 					map.put("date", article.getPubDate() + " by " + article.getAuthor());
 					listMap.add(map);
 				}
-//				adapter = new SimpleAdapter(activity, listMap,
-//						android.R.layout.simple_list_item_2, new String[] {
-//								"title", "description" }, new int[] {
-//								android.R.id.text1, android.R.id.text2 });
 				adapter = new CustomListAdapter(activity, listMap);
 				fragment.setListAdapter(adapter);	
+				Log.v("Rss Service", "On ajoute l'adapter au fragment");
 			}
 		});
 		
@@ -69,7 +66,7 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
 
 	@Override
 	protected Feed doInBackground(String... arg0) {
-		
+		Log.v("Rss Service", "On commence a recuperer le XML");
 		try {
             URL url= new URL(arg0[0]);
             
@@ -83,10 +80,12 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
             
             xmlreader.parse(is);
             stream = theRSSHandler.getFeed();
+            Log.v("Rss Service", "On a reussi a recuperer le XML");
             return stream;
         } catch (Exception e) {
         	e.printStackTrace();
         	stream = new Feed();
+        	Log.v("Rss Service", "On a pas reussi a recuperer le XML");
             return stream;
         }
 	}

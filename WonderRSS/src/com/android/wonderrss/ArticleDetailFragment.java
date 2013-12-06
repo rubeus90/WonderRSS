@@ -1,14 +1,18 @@
 package com.android.wonderrss;
 
 import android.app.Fragment;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class ArticleDetailFragment extends Fragment {
+	FeedArticle article;
 
 	public ArticleDetailFragment() {
 		setHasOptionsMenu(true);
@@ -26,7 +30,7 @@ public class ArticleDetailFragment extends Fragment {
 		
 		Bundle bundle = getActivity().getIntent().getExtras();
 		int position = bundle.getInt("position");
-		FeedArticle article = RssService.stream.getListe().get(position);
+		article = RssService.stream.getListe().get(position);
 		
 		//Supprimer tous les images dans le code HTML
 		String htmlBody = article.getContent().replaceAll("<img.+/(img)*>", "");
@@ -40,6 +44,16 @@ public class ArticleDetailFragment extends Fragment {
 			e.getStackTrace();
 			content.setText("An error has occured. No content has been downloaded.");
 		}
+		
+		title.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setData(Uri.parse(article.getUrl()));
+				startActivity(i);
+			}
+		});
 		
 		return view;
 	}
