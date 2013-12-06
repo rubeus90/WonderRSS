@@ -49,9 +49,11 @@ public class ArticleDetailFragment extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(Intent.ACTION_VIEW);
-				i.setData(Uri.parse(article.getUrl()));
-				startActivity(i);
+				if(article.getUrl() != null){
+					Intent i = new Intent(Intent.ACTION_VIEW);
+					i.setData(Uri.parse(article.getUrl()));
+					startActivity(i);
+				}
 			}
 		});
 		

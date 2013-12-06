@@ -58,6 +58,8 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
 				adapter = new CustomListAdapter(activity, listMap);
 				fragment.setListAdapter(adapter);	
 				Log.v("Rss Service", "On ajoute l'adapter au fragment");
+				
+//				fragment.getActivity().setTitle(feed.getTitle());
 			}
 		});
 		
@@ -81,6 +83,10 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
             xmlreader.parse(is);
             stream = theRSSHandler.getFeed();
             Log.v("Rss Service", "On a reussi a recuperer le XML");
+            
+            //On met le URL dans la base de donnees
+            MainActivity.manager.add(arg0[0]);
+            
             return stream;
         } catch (Exception e) {
         	e.printStackTrace();
