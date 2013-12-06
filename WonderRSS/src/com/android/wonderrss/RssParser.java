@@ -10,10 +10,16 @@ public class RssParser extends DefaultHandler{
 	private Feed feed = new Feed();
 	private int articlesAdded = 0;
 	StringBuffer buffer;
+	String url;
 
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException{
 		buffer = new StringBuffer();
-//		currentArticle.setUrl(attributes.getValue("href").toString());
+		
+		if(localName.equalsIgnoreCase("link")){
+			if(attributes.getValue("href") != null)
+				url = attributes.getValue("href").toString();
+		}
+
 	}
 	
 	public void endElement(String uri, String localName, String qName) throws SAXException{
@@ -33,11 +39,11 @@ public class RssParser extends DefaultHandler{
 			currentArticle.setContent(buffer.toString());
 		}
 		else if(localName.equalsIgnoreCase("link")){
-			String url = buffer.toString();
-			if(! url.equals(""))
-				currentArticle.setUrl(url);	
+			String string = buffer.toString();
+			if(! string.equals(""))
+				currentArticle.setUrl(string);	
 			else
-				currentArticle.setUrl(null);
+				currentArticle.setUrl(url);
 		}
 		
 		if(localName.equalsIgnoreCase("entry") || localName.equalsIgnoreCase("item")){			
