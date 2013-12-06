@@ -9,10 +9,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ArticleDetailFragment extends Fragment {
 	FeedArticle article;
+	TextView title, date, content;
+	ImageView thumbnail;
 
 	public ArticleDetailFragment() {
 		setHasOptionsMenu(true);
@@ -24,25 +27,19 @@ public class ArticleDetailFragment extends Fragment {
 		// Inflate the layout for this fragment	
 		View view = inflater.inflate(R.layout.article_detail_fragment, container, false);
 		
-		TextView title = (TextView) view.findViewById(R.id.title);
-		TextView date = (TextView) view.findViewById(R.id.pubDate);
-		TextView content = (TextView) view.findViewById(R.id.content);
+		title = (TextView) view.findViewById(R.id.title);
+		date = (TextView) view.findViewById(R.id.pubDate);
+		content = (TextView) view.findViewById(R.id.content);
+		thumbnail = (ImageView) view.findViewById(R.id.image);
 		
-		Bundle bundle = getActivity().getIntent().getExtras();
-		int position = bundle.getInt("position");
-		article = RssService.stream.getListe().get(position);
-		
-		//Supprimer tous les images dans le code HTML
-		String htmlBody = article.getContent().replaceAll("<img.+/(img)*>", "");
-		
-		title.setText(article.getTitle());
-		date.setText(article.getPubDate());
+		int position = 0;
 		try{
-			content.setText(Html.fromHtml(htmlBody));
+			Bundle bundle = getActivity().getIntent().getExtras();
+			position = bundle.getInt("position");
+			updateContent(position);
 		}
 		catch(Exception e){
 			e.getStackTrace();
-			content.setText("An error has occured. No content has been downloaded.");
 		}
 		
 		title.setOnClickListener(new OnClickListener() {
@@ -63,5 +60,24 @@ public class ArticleDetailFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+	}
+	
+	public void updateContent(int position){
+		article = RssService.stream.getListe().get(position);
+		
+		//Supprimer tous les images dans le code HTML
+		String htmlBody = article.getContent().replaceAll("<img.+/(img)*>", "");
+		
+		title.setText(article.getTitle());
+		date.setText(article.getPubDate());
+		try{
+			content.setText(Html.fromHtml(htmlBody));
+		}
+		catch(Exception e){
+			e.getStackTrace();
+			content.setText("An error has occured. No content has been downloaded.");
+		}
+		
+		thumbnail.setImageResource(R.drawable.photo);
 	}
 }

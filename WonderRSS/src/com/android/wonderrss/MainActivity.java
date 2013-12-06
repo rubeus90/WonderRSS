@@ -26,7 +26,7 @@ public class MainActivity extends Activity implements ArticleListFragment.OnList
         } 
 		//if the fragment is already in the layout
 		else {
-//            detailFragment.updateContent(position);
+            detailFragment.updateContent(position);
         }
 	}
 }
