@@ -14,16 +14,15 @@
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
 	        android:textSize="25sp"
-	        android:textColor="@color/h1"
-	        android:text="@string/downloading"/>
+	        android:textColor="@color/h1"/>
 	    
 	    <TextView 
 	        android:id="@+id/pubDate" 
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:textSize="12sp"
+	        android:textSize="14sp"
 	        android:textStyle="italic"
-	        android:text="@string/downloading"/>
+	        android:textColor="@color/h2"/>
 	    
 	    <ImageView
 	        android:id="@+id/image"
@@ -37,7 +36,6 @@
 	        android:id="@+id/content"
 	        android:layout_width="match_parent"
 	        android:layout_height="wrap_content"
-	        android:textSize="15sp"
-	        android:text="@string/downloading"/>
+	        android:textSize="15sp"/>
 	</LinearLayout>
 </ScrollView>    

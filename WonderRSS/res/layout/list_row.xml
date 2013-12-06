@@ -2,12 +2,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="6dp" >
+    android:padding="8dp" >
     
     <ImageView 
         android:id="@+id/thumbnail"
-        android:layout_width="110dp"
-        android:layout_height="110dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:contentDescription="@string/image_description"
         android:src="@drawable/photo"
         android:scaleType="centerCrop"/>    
@@ -31,6 +31,7 @@
         android:textColor="@color/h2"
         android:layout_toRightOf="@id/thumbnail"
         android:layout_below="@id/list_title"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="10dp"
+        android:maxLines="2"/>
 
 </RelativeLayout>

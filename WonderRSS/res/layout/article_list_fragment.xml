@@ -24,6 +24,9 @@
 	    android:id="@id/android:empty"
 	    android:layout_width="fill_parent"
 	    android:layout_height="fill_parent"
-	    android:text="@string/no_rss"/>
+	    android:text="@string/no_rss"
+	    android:gravity="center"
+	    android:textColor="@color/h2"
+	    android:textSize="24sp"/>
  
 </LinearLayout>
