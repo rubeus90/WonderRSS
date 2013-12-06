@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -74,6 +75,7 @@ public class ArticleDetailFragment extends Fragment {
 		date.setText(article.getPubDate());
 		try{
 			content.setText(Html.fromHtml(htmlBody));
+			content.setMovementMethod(LinkMovementMethod.getInstance());
 		}
 		catch(Exception e){
 			e.getStackTrace();
