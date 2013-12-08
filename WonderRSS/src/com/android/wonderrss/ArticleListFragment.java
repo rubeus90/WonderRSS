@@ -128,4 +128,8 @@ public class ArticleListFragment extends ListFragment{
 		rss = new RssService(this);
 		rss.execute(url);			
 	}
+	
+	public void setUrl(String url){
+		this.url = url;
+	}
 }
