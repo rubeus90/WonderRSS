@@ -49,5 +49,11 @@ public class Feed {
 	public void addArticle(FeedArticle article) {
 		liste.add(article);
 	}
+	
+	public void addFeed(Feed feed){
+		for(FeedArticle articles : feed.getListe()){
+			liste.add(articles);
+		}
+	}
 }
 

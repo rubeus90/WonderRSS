@@ -81,7 +81,8 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
             InputSource is=new InputSource(url.openStream());
             
             xmlreader.parse(is);
-            stream = theRSSHandler.getFeed();
+            Feed newFeed = theRSSHandler.getFeed();
+            stream.addFeed(newFeed);
             Log.v("Rss Service", "On a reussi a recuperer le XML");
             
             //On met le URL dans la base de donnees
@@ -90,7 +91,8 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
             return stream;
         } catch (Exception e) {
         	e.printStackTrace();
-        	stream = new Feed();
+        	if(stream == null)
+        		stream = new Feed();
         	Log.v("Rss Service", "On a pas reussi a recuperer le XML");
             return stream;
         }
