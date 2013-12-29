@@ -6,13 +6,12 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 
-public class MainActivity extends Activity implements ArticleListFragment.OnListItemClickListener{
-	public static FeedDbManager manager;
+public class ListActivity extends Activity implements ArticleListFragment.OnListItemClickListener{
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);  
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_list);
         
         Intent intent = getIntent();
         String action = intent.getDataString();
@@ -20,8 +19,6 @@ public class MainActivity extends Activity implements ArticleListFragment.OnList
         ArticleListFragment listFragment = (ArticleListFragment) getFragmentManager().findFragmentById(R.id.listfragment);
         listFragment.setUrl(action);
         listFragment.fetchFeed();
-        
-        manager = new FeedDbManager(this);
     }
 
 	@Override

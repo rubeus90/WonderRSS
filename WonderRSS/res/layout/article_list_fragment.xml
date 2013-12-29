@@ -7,7 +7,7 @@
 	android:layout_height="fill_parent"
 	android:orientation="vertical"
 	android:background="@color/card_background"
-	tools:context=".MainActivity" >
+	tools:context=".ListActivity" >
  
 	<ListView
 		android:id="@id/android:list"

@@ -60,7 +60,7 @@ public class ArticleListFragment extends ListFragment{
 
 		fetchFeed();
 
-		keyboard = (InputMethodManager) getActivity().getSystemService(MainActivity.INPUT_METHOD_SERVICE);
+		keyboard = (InputMethodManager) getActivity().getSystemService(ListActivity.INPUT_METHOD_SERVICE);
 	}
 	
 	@Override

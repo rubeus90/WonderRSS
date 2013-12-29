@@ -85,9 +85,6 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
             stream.addFeed(newFeed);
             Log.v("Rss Service", "On a reussi a recuperer le XML");
             
-            //On met le URL dans la base de donnees
-            MainActivity.manager.add(arg0[0]);
-            
             return stream;
         } catch (Exception e) {
         	e.printStackTrace();
@@ -99,7 +96,7 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
 	}
 	
 	public boolean isConnectedToInternet(){
-        ConnectivityManager connectivity = (ConnectivityManager) activity.getSystemService(MainActivity.CONNECTIVITY_SERVICE);
+        ConnectivityManager connectivity = (ConnectivityManager) activity.getSystemService(ListActivity.CONNECTIVITY_SERVICE);
           if (connectivity != null) 
           {
               NetworkInfo[] info = connectivity.getAllNetworkInfo();
