@@ -1,5 +1,7 @@
 package com.android.wonderrss;
 
+import android.graphics.Bitmap;
+
 public class FeedArticle {
 	private String title;
 	private String author;
@@ -7,7 +9,21 @@ public class FeedArticle {
 	private String guid;
 	private String content;
 	private String url;
+	private String imageUrl;
+	private Bitmap image;
 	
+	public Bitmap getImage() {
+		return image;
+	}
+	public void setImage(Bitmap image) {
+		this.image = image;
+	}
+	public String getImageUrl() {
+		return imageUrl;
+	}
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
 	public String getUrl() {
 		return url;
 	}

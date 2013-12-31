@@ -1,11 +1,26 @@
 package com.android.wonderrss;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.Html.ImageGetter;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,20 +83,24 @@ public class ArticleDetailFragment extends Fragment {
 	public void updateContent(int position){		
 		article = RssService.stream.getListe().get(position);
 		
-		//Supprimer tous les images dans le code HTML
-		String htmlBody = article.getContent().replaceAll("<img.+/(img)*>", "");
-		
 		title.setText(article.getTitle());
-		date.setText(article.getPubDate());
+		date.setText(article.getPubDate());	
+		
+		//Supprimer tous les images dans le code HTML
+//		String htmlBody = article.getContent().replaceAll("<img.+/(img)*>", "");	
+		String htmlBody = article.getContent().replaceAll("<img.+?>", "");
 		try{
 			content.setText(Html.fromHtml(htmlBody));
-			content.setMovementMethod(LinkMovementMethod.getInstance());
+//			content.setText(htmlBody);
+			
+			content.setMovementMethod(LinkMovementMethod.getInstance()); //pour que les liens deviennent cliquables
 		}
 		catch(Exception e){
 			e.getStackTrace();
+			Log.e("ArticleDetailFragment", "Erreur transformer le code HTML en texte");
 			content.setText("An error has occured. No content has been downloaded.");
 		}
 		
-		thumbnail.setImageResource(R.drawable.photo);
+		thumbnail.setImageBitmap(article.getImage());
 	}
 }

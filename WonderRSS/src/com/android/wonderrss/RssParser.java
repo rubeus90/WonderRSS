@@ -8,9 +8,9 @@ public class RssParser extends DefaultHandler{
 	
 	private FeedArticle currentArticle = new FeedArticle();
 	private Feed feed = new Feed();
-	private int articlesAdded = 0;
 	StringBuffer buffer;
 	String url;
+	String imageUrl;
 
 	public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException{
 		buffer = new StringBuffer();
@@ -18,6 +18,11 @@ public class RssParser extends DefaultHandler{
 		if(localName.equalsIgnoreCase("link")){
 			if(attributes.getValue("href") != null)
 				url = attributes.getValue("href").toString();
+		}
+		if(localName.equalsIgnoreCase("enclosure")){
+			if(attributes.getValue("url") != null){
+				imageUrl = attributes.getValue("url").toString();
+			}
 		}
 
 	}
@@ -45,11 +50,13 @@ public class RssParser extends DefaultHandler{
 			else
 				currentArticle.setUrl(url);
 		}
+		else if(localName.equalsIgnoreCase("enclosure")){
+			currentArticle.setImageUrl(imageUrl);
+		}
 		
 		if(localName.equalsIgnoreCase("entry") || localName.equalsIgnoreCase("item")){			
 			feed.addArticle(currentArticle);	
 			currentArticle = new FeedArticle();
-			articlesAdded++;
 		}
 	}
 	

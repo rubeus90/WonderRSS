@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 public class CustomListAdapter extends BaseAdapter{
-	private List<HashMap<String, String>> map;
+	private List<HashMap<String, Object>> map;
 	private LayoutInflater inflater;
 	
-	public CustomListAdapter(Context context, List<HashMap<String, String>> map){
+	public CustomListAdapter(Context context, List<HashMap<String, Object>> map){
 		this.map = map;
 		inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
@@ -45,8 +46,9 @@ public class CustomListAdapter extends BaseAdapter{
         TextView title = (TextView) view.findViewById(R.id.list_title);
         TextView dateAuthor = (TextView) view.findViewById(R.id.list_date);
         
-        title.setText(map.get(position).get("title"));
-        dateAuthor.setText(map.get(position).get("date"));
+        title.setText((String)map.get(position).get("title"));
+        dateAuthor.setText((String)map.get(position).get("date"));
+        thumbnail.setImageBitmap((Bitmap) map.get(position).get("image"));
         
 		return view;
 	}
