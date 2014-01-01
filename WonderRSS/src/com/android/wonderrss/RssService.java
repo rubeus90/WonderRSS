@@ -50,28 +50,23 @@ public class RssService	extends AsyncTask<Map<String,?>, Void, Feed> {
 
 	public void onPostExecute(final Feed feed) {
 		Log.v("Rss Service", "onPostExecute");
-		activity.runOnUiThread(new Runnable() {
-
-			@Override
-			public void run() {
-				List<FeedArticle> list = feed.getListe();					
-				HashMap<String, Object> map;
-				List<HashMap<String, Object>> listMap = new ArrayList<HashMap<String, Object>>();
 				
-				/****On ajoute les proprietes de chaque article dans un HashMap*****/
-				for (final FeedArticle article : list) {					
-					map = new HashMap<String, Object>();
-					map.put("title", article.getTitle());
-					map.put("date", article.getPubDate() + " by " + article.getAuthor());
-					map.put("image", article.getImage());
-					
-					listMap.add(map);
-				}
-				adapter = new CustomListAdapter(activity, listMap);
-				fragment.setListAdapter(adapter);	
-				Log.v("Rss Service", "On ajoute l'adapter au fragment");
-			}
-		});
+		List<FeedArticle> list = feed.getListe();					
+		HashMap<String, Object> map;
+		List<HashMap<String, Object>> listMap = new ArrayList<HashMap<String, Object>>();
+		
+		/****On ajoute les proprietes de chaque article dans un HashMap*****/
+		for (final FeedArticle article : list) {					
+			map = new HashMap<String, Object>();
+			map.put("title", article.getTitle());
+			map.put("date", article.getPubDate() + " by " + article.getAuthor());
+			map.put("image", article.getImage());
+			
+			listMap.add(map);
+		}
+		adapter = new CustomListAdapter(activity, listMap);
+		fragment.setListAdapter(adapter);	
+		Log.v("Rss Service", "On ajoute l'adapter au fragment");
 		
 		progress.dismiss();
 	}

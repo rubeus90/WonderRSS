@@ -63,6 +63,9 @@ public class ArticleListFragment extends ListFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//Retenir le fragment quand la configuration de l'appareil (ex: orientation) change
+		setRetainInstance(true);
 
 		// if (savedInstanceState != null) {
 		// url = savedInstanceState.getString("url");
