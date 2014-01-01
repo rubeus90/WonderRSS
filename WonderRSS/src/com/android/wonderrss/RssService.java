@@ -60,8 +60,9 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
 				List<FeedArticle> list = feed.getListe();					
 				HashMap<String, Object> map;
 				List<HashMap<String, Object>> listMap = new ArrayList<HashMap<String, Object>>();
-				for (final FeedArticle article : list) {
-					/****On ajoute les proprietes de chaque article dans un HashMap*****/
+				
+				/****On ajoute les proprietes de chaque article dans un HashMap*****/
+				for (final FeedArticle article : list) {					
 					map = new HashMap<String, Object>();
 					map.put("title", article.getTitle());
 					map.put("date", article.getPubDate() + " by " + article.getAuthor());
@@ -104,29 +105,12 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
             return stream;
         } catch (Exception e) {
         	e.printStackTrace();
-        	if(!isConnectedToInternet())
-        		Toast.makeText(activity, "No internet connection!", Toast.LENGTH_SHORT).show();
         	if(stream == null)
         		stream = new Feed();
         	Log.e("Rss Service", "On a pas reussi a recuperer le XML");
             return stream;
         }
 	}
-	
-	public boolean isConnectedToInternet(){
-        ConnectivityManager connectivity = (ConnectivityManager) activity.getSystemService(ListActivity.CONNECTIVITY_SERVICE);
-          if (connectivity != null) 
-          {
-              NetworkInfo[] info = connectivity.getAllNetworkInfo();
-              if (info != null) 
-                  for (int i = 0; i < info.length; i++) 
-                      if (info[i].getState() == NetworkInfo.State.CONNECTED)
-                      {
-                          return true;
-                      } 
-          }
-          return false;
-    }
 	
 	public Bitmap getBitmapFromURL(String src) {
 	    try {

@@ -2,6 +2,8 @@ package com.android.wonderrss;
 
 import android.app.Activity;
 import android.app.ListFragment;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class ArticleListFragment extends ListFragment{
 	private String url;
@@ -73,7 +76,6 @@ public class ArticleListFragment extends ListFragment{
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// Inflate the menu items for use in the action bar
-//		inflater = getActivity().getMenuInflater();
 		inflater.inflate(R.menu.default_menu, menu);
 
 		addItem = menu.findItem(R.id.action_new);
@@ -84,9 +86,8 @@ public class ArticleListFragment extends ListFragment{
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
 				url = editURL.getText().toString();
-				rss = new RssService(ArticleListFragment.this);
 				if (keyCode == 66) {
-					rss.execute(url);
+					fetchFeed();
 					addItem.collapseActionView();
 					editURL.setActivated(false);
 					editURL.setText("");
@@ -125,11 +126,32 @@ public class ArticleListFragment extends ListFragment{
 	}
 
 	public void fetchFeed() {
-		rss = new RssService(this);
-		rss.execute(url);			
+		if(isConnectedToInternet()){
+			rss = new RssService(this);
+			rss.execute(url);	
+		}
+		else{
+			System.out.println("coucou");
+			Toast.makeText(getActivity(), "No internet connection!", Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 	public void setUrl(String url){
 		this.url = url;
 	}
+	
+	public boolean isConnectedToInternet(){
+        ConnectivityManager connectivity = (ConnectivityManager) getActivity().getSystemService(ListActivity.CONNECTIVITY_SERVICE);
+          if (connectivity != null) 
+          {
+              NetworkInfo[] info = connectivity.getAllNetworkInfo();
+              if (info != null) 
+                  for (int i = 0; i < info.length; i++) 
+                      if (info[i].getState() == NetworkInfo.State.CONNECTED)
+                      {
+                          return true;
+                      } 
+          }
+          return false;
+    }
 }
