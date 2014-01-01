@@ -64,7 +64,6 @@ public class ArticleListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		//Retenir le fragment quand la configuration de l'appareil (ex: orientation) change
 		setRetainInstance(true);
 
 		// if (savedInstanceState != null) {
@@ -187,4 +186,11 @@ public class ArticleListFragment extends ListFragment {
 		edit.clear();
 		edit.commit();
 	}
+
+	@Override
+	public void onDetach() {
+		super.onDetach();
+		rss.getProgress().dismiss();
+	}
+	
 }

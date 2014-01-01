@@ -32,9 +32,13 @@ public class RssService	extends AsyncTask<Map<String,?>, Void, Feed> {
 	private ArticleListFragment fragment;
 	private RssParser theRSSHandler;
 	private ListAdapter adapter;
-	private ProgressDialog progress;
 	static Feed stream;
 	private boolean boo = false;
+	private ProgressDialog progress;
+
+	public ProgressDialog getProgress() {
+		return progress;
+	}
 
 	public RssService(ArticleListFragment fragment) {	
 		this.fragment = fragment;
@@ -42,7 +46,7 @@ public class RssService	extends AsyncTask<Map<String,?>, Void, Feed> {
 	}
 
 	public void onPreExecute() {
-		Log.v("Rss Service", "onPreExecute");
+		Log.v("Rss Service", "onPreExecute");		
 		progress = new ProgressDialog(activity);
 		progress.setMessage(activity.getResources().getString(R.string.downloading));
 		progress.show();
@@ -68,7 +72,8 @@ public class RssService	extends AsyncTask<Map<String,?>, Void, Feed> {
 		fragment.setListAdapter(adapter);	
 		Log.v("Rss Service", "On ajoute l'adapter au fragment");
 		
-		progress.dismiss();
+		if(progress != null)
+			progress.dismiss();
 	}
 
 	@Override
@@ -110,14 +115,66 @@ public class RssService	extends AsyncTask<Map<String,?>, Void, Feed> {
         }
 	}
 	
+	public static int calculateInSampleSize(
+        BitmapFactory.Options options, int reqWidth, int reqHeight) {
+	    // Raw height and width of image
+	    final int height = options.outHeight;
+	    final int width = options.outWidth;
+	    System.out.println("largeur = " + options.outWidth);
+	    System.out.println("hauteur = " + options.outHeight);
+	    int inSampleSize = 1;
+	
+	    if (height > reqHeight || width > reqWidth) {
+	
+	        final int halfHeight = height / 2;
+	        final int halfWidth = width / 2;
+	
+	        // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+	        // height and width larger than the requested height and width.
+	        while ((halfHeight / inSampleSize) > reqHeight
+	                && (halfWidth / inSampleSize) > reqWidth) {
+	            inSampleSize *= 2;
+	        }
+	    }
+	
+	    return inSampleSize;
+	}
+	
+	public static Bitmap decodeSampledBitmapFromUrl(URL url, int reqWidth, int reqHeight) {
+		HttpURLConnection connection;
+		try {
+			connection = (HttpURLConnection) url.openConnection();
+			connection.setDoInput(true);
+	        connection.connect();
+	        InputStream input = connection.getInputStream();
+	        
+		    // First decode with inJustDecodeBounds=true to check dimensions
+		    final BitmapFactory.Options options = new BitmapFactory.Options();
+		    options.inJustDecodeBounds = true;
+		    BitmapFactory.decodeStream(input, null, options);
+
+		    // Calculate inSampleSize
+		    options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+		    input.close();
+		    
+		    connection = (HttpURLConnection) url.openConnection();
+	        connection.setDoInput(true);
+	        connection.connect();
+	        input = connection.getInputStream();
+	        
+		    // Decode bitmap with inSampleSize set
+		    options.inJustDecodeBounds = false;
+		    return BitmapFactory.decodeStream(input, null, options);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public Bitmap getBitmapFromURL(String src) {
 	    try {
 	        URL url = new URL(src);
-	        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-	        connection.setDoInput(true);
-	        connection.connect();
-	        InputStream input = connection.getInputStream();
-	        Bitmap myBitmap = BitmapFactory.decodeStream(input);
+	        Bitmap myBitmap = decodeSampledBitmapFromUrl(url, 200, 150);
 	        return myBitmap;
 	    } catch (IOException e) {
 	        e.printStackTrace();
@@ -129,7 +186,7 @@ public class RssService	extends AsyncTask<Map<String,?>, Void, Feed> {
 	public void setArticleImage(){
 		for(final FeedArticle article : stream.getListe()){
 			boo = false;
-			
+
 			//Si le XML n'a pas de champ "enclosure" et le lien de l'image est contenu dans le HTML
 			if(article.getImageUrl() == null){
 				//On recupere l'image de l'article avec le lien dans le content
@@ -157,5 +214,5 @@ public class RssService	extends AsyncTask<Map<String,?>, Void, Feed> {
 				article.setImage(getBitmapFromURL(article.getImageUrl()));
 			}
         }
-	}
+	}	
 }
