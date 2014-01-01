@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -19,17 +20,13 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.provider.DocumentsContract.Document;
 import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.util.Log;
 import android.widget.ListAdapter;
-import android.widget.Toast;
 
-public class RssService	extends AsyncTask<String, Void, Feed> {
+public class RssService	extends AsyncTask<Map<String,?>, Void, Feed> {
 	
 	private Activity activity;
 	private ArticleListFragment fragment;
@@ -80,22 +77,30 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
 	}
 
 	@Override
-	protected Feed doInBackground(String... arg0) {
-		Log.v("Rss Service", "On commence a recuperer le XML");
+	protected Feed doInBackground(Map<String,?>... arg0) {
+		stream = new Feed();
+		
+		Log.v("Rss Service", "On commence a recuperer le XML");		
 		try {
-            URL url= new URL(arg0[0]);
+			URL url = null;
+			for (Map.Entry<String, ?> entry : arg0[0].entrySet()) {		
+				if(entry.getKey() != null){
+					url= new URL(entry.getValue().toString());
+	            
+		            SAXParserFactory factory =SAXParserFactory.newInstance();
+		            SAXParser parser=factory.newSAXParser();
+		            XMLReader xmlreader=parser.getXMLReader();
+		            
+		            theRSSHandler=new RssParser();
+		            xmlreader.setContentHandler(theRSSHandler);
+		            InputSource is=new InputSource(url.openStream());
+		            
+		            xmlreader.parse(is);
+		            Feed newFeed = theRSSHandler.getFeed();
+		            stream.addFeed(newFeed);
+				}
+			}
             
-            SAXParserFactory factory =SAXParserFactory.newInstance();
-            SAXParser parser=factory.newSAXParser();
-            XMLReader xmlreader=parser.getXMLReader();
-            
-            theRSSHandler=new RssParser();
-            xmlreader.setContentHandler(theRSSHandler);
-            InputSource is=new InputSource(url.openStream());
-            
-            xmlreader.parse(is);
-            Feed newFeed = theRSSHandler.getFeed();
-            stream.addFeed(newFeed);
             Log.v("Rss Service", "On a reussi a recuperer le XML");
             
             Log.v("Rss Service", "On recupere les images des articles");
@@ -105,8 +110,6 @@ public class RssService	extends AsyncTask<String, Void, Feed> {
             return stream;
         } catch (Exception e) {
         	e.printStackTrace();
-        	if(stream == null)
-        		stream = new Feed();
         	Log.e("Rss Service", "On a pas reussi a recuperer le XML");
             return stream;
         }

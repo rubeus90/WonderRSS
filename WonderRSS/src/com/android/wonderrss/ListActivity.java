@@ -11,14 +11,16 @@ public class ListActivity extends Activity implements ArticleListFragment.OnList
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);  
-        setContentView(R.layout.activity_list);
+        setContentView(R.layout.activity_list);        
         
         Intent intent = getIntent();
         String action = intent.getDataString();
         
         ArticleListFragment listFragment = (ArticleListFragment) getFragmentManager().findFragmentById(R.id.listfragment);
-        listFragment.setUrl(action);
-        listFragment.fetchFeed();
+        if(action != null){
+        	listFragment.saveUrl(this,action); 
+        	listFragment.fetchFeed();
+        }
     }
 
 	@Override

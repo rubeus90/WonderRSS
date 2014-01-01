@@ -1,10 +1,16 @@
 package com.android.wonderrss;
 
+import java.util.Map;
+
 import android.app.Activity;
 import android.app.ListFragment;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,59 +23,61 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class ArticleListFragment extends ListFragment{
-	private String url;
+public class ArticleListFragment extends ListFragment {
 	private RssService rss;
 	private EditText editURL;
 	private MenuItem addItem;
 	private InputMethodManager keyboard;
 	private OnListItemClickListener listener;
-	
+
 	public interface OnListItemClickListener {
-        public void onItemClick(int position);
-    }
-	
+		public void onItemClick(int position);
+	}
+
 	@Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        
-        // This makes sure that the container activity has implemented
-        // the callback interface. If not, it throws an exception
-        try {
-            listener = (OnListItemClickListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()+ " must implement OnListItemClickListener");
-        }
-    }
-	
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// This makes sure that the container activity has implemented
+		// the callback interface. If not, it throws an exception
+		try {
+			listener = (OnListItemClickListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement OnListItemClickListener");
+		}
+	}
+
 	public ArticleListFragment() {
-    	setHasOptionsMenu(true);	
-    }
-	
+		setHasOptionsMenu(true);
+	}
+
 	@Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.article_list_fragment, container, false);
-    }
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		// Inflate the layout for this fragment
+		return inflater.inflate(R.layout.article_list_fragment, container,
+				false);
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		if (savedInstanceState != null) {
-			url = savedInstanceState.getString("url");
-		}
+		// if (savedInstanceState != null) {
+		// url = savedInstanceState.getString("url");
+		// }
 
 		fetchFeed();
 
-		keyboard = (InputMethodManager) getActivity().getSystemService(ListActivity.INPUT_METHOD_SERVICE);
+		keyboard = (InputMethodManager) getActivity().getSystemService(
+				ListActivity.INPUT_METHOD_SERVICE);
 	}
-	
+
 	@Override
-	public void onListItemClick (ListView l, View v, int position, long id){
+	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
-		
+
 		listener.onItemClick(position);
 	}
 
@@ -85,8 +93,9 @@ public class ArticleListFragment extends ListFragment{
 
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				url = editURL.getText().toString();
+				// url = editURL.getText().toString();				
 				if (keyCode == 66) {
+					saveUrl(getActivity(), editURL.getText().toString());
 					fetchFeed();
 					addItem.collapseActionView();
 					editURL.setActivated(false);
@@ -101,7 +110,9 @@ public class ArticleListFragment extends ListFragment{
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
-		case R.id.action_settings:
+		case R.id.action_remove:
+			deleteUrl(getActivity());
+			fetchFeed();
 			return true;
 		case R.id.action_refresh:
 			fetchFeed();
@@ -119,39 +130,58 @@ public class ArticleListFragment extends ListFragment{
 	// url = savedInstanceState.getString("url");
 	// }
 
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putString("url", url);
+	// @Override
+	// public void onSaveInstanceState(Bundle outState) {
+	// super.onSaveInstanceState(outState);
+	// outState.putString("url", url);
+	// }
+
+	@SuppressWarnings("unchecked")
+	public void fetchFeed() {
+		try{
+			if(!isConnectedToInternet())
+				Toast.makeText(getActivity(), "No internet connection!", Toast.LENGTH_SHORT).show();
+			else{
+				rss = new RssService(this);
+				rss.execute(loadUrl(getActivity()));
+			}
+		}
+		catch(Exception e){
+			e.printStackTrace();			
+		}
 	}
 
-	public void fetchFeed() {
-		if(isConnectedToInternet()){
-			rss = new RssService(this);
-			rss.execute(url);	
+	public boolean isConnectedToInternet() {
+		ConnectivityManager connectivity = (ConnectivityManager) getActivity()
+				.getSystemService(ListActivity.CONNECTIVITY_SERVICE);
+		if (connectivity != null) {
+			NetworkInfo[] info = connectivity.getAllNetworkInfo();
+			if (info != null)
+				for (int i = 0; i < info.length; i++)
+					if (info[i].getState() == NetworkInfo.State.CONNECTED) {
+						return true;
+					}
 		}
-		else{
-			System.out.println("coucou");
-			Toast.makeText(getActivity(), "No internet connection!", Toast.LENGTH_SHORT).show();
-		}
+		return false;
+	}
+
+	public void saveUrl(Context context, String url) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		Editor edit = prefs.edit();
+		edit.putString(url, url);
+		edit.commit();
+	}
+
+	public Map<String, ?> loadUrl(Context context) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		Map<String, ?> map = prefs.getAll();
+		return map;
 	}
 	
-	public void setUrl(String url){
-		this.url = url;
+	public void deleteUrl(Context context){
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		Editor edit = prefs.edit();
+		edit.clear();
+		edit.commit();
 	}
-	
-	public boolean isConnectedToInternet(){
-        ConnectivityManager connectivity = (ConnectivityManager) getActivity().getSystemService(ListActivity.CONNECTIVITY_SERVICE);
-          if (connectivity != null) 
-          {
-              NetworkInfo[] info = connectivity.getAllNetworkInfo();
-              if (info != null) 
-                  for (int i = 0; i < info.length; i++) 
-                      if (info[i].getState() == NetworkInfo.State.CONNECTED)
-                      {
-                          return true;
-                      } 
-          }
-          return false;
-    }
 }
