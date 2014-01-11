@@ -1,8 +1,16 @@
 package com.android.wonderrss;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -87,6 +95,37 @@ public class ArticleDetailFragment extends Fragment {
 			content.setText("An error has occured. No content has been downloaded.");
 		}
 		
-		thumbnail.setImageBitmap(article.getImage());
+		new GetImage().execute(article.getImageUrl());
+	}
+	
+	private class GetImage extends AsyncTask<String, Void, Bitmap>{
+
+		@Override
+		protected Bitmap doInBackground(String... params) {
+			try {
+				URL url = new URL(params[0]);
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+				connection.setDoInput(true);
+				connection.connect();
+				InputStream input = connection.getInputStream();
+
+				Bitmap myBitmap = BitmapFactory.decodeStream(input, null, null);
+				return myBitmap;
+			} catch (IOException e) {
+				e.printStackTrace();
+				Log.e("ArticleDetailFragment",
+						"Probleme recuperer le bitmap a partir du URL");
+				return null;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Bitmap result) {
+			super.onPostExecute(result);
+			
+			thumbnail.setImageBitmap(result);
+		}
+		
+		
 	}
 }

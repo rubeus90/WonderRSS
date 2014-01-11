@@ -46,7 +46,7 @@ public class ImageService extends AsyncTask<Feed, Integer, Void> {
 					public Drawable getDrawable(String src) {
 						if (!boo) {
 							if (src.contains(".png") || src.contains(".jpg")) {
-
+								article.setImageUrl(src);
 								Bitmap image = getBitmapFromURL(src);
 								if (image != null) {
 									article.setImage(image);
@@ -73,7 +73,6 @@ public class ImageService extends AsyncTask<Feed, Integer, Void> {
 		Log.i("AsyncTask image", "onProgressUpdate");
 		super.onProgressUpdate(values);
 		map.get(values[0]).put("image", feed.getListe().get(values[0]).getImage());
-		System.out.println(values[0]);
 		adapter.notifyDataSetChanged();
 	}
 
@@ -82,8 +81,6 @@ public class ImageService extends AsyncTask<Feed, Integer, Void> {
 		// Raw height and width of image
 		final int height = options.outHeight;
 		final int width = options.outWidth;
-		System.out.println("largeur = " + options.outWidth);
-		System.out.println("hauteur = " + options.outHeight);
 		int inSampleSize = 1;
 
 		if (height > reqHeight || width > reqWidth) {
@@ -143,7 +140,7 @@ public class ImageService extends AsyncTask<Feed, Integer, Void> {
 			return myBitmap;
 		} catch (IOException e) {
 			e.printStackTrace();
-			Log.e("ArticleDetailFragment",
+			Log.e("ImageService",
 					"Probleme recuperer le bitmap a partir du URL");
 			return null;
 		}
