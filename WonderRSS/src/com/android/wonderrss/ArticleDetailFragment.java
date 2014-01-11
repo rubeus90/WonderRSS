@@ -94,7 +94,7 @@ public class ArticleDetailFragment extends Fragment {
 			Log.e("ArticleDetailFragment", "Erreur transformer le code HTML en texte");
 			content.setText("An error has occured. No content has been downloaded.");
 		}
-		
+		thumbnail.setImageBitmap(null);
 		new GetImage().execute(article.getImageUrl());
 	}
 	
