@@ -66,7 +66,7 @@ public class RssService	extends AsyncTask<Map<String,?>, Void, Feed> {
 		
 		/***** On lance le AsyncTask pour telecharger des images *********/
 		ImageService imageService = new ImageService(adapter, listMap);
-		imageService.execute(feed);
+		imageService.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feed);
 	}
 
 	@Override

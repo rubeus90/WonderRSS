@@ -1,15 +1,9 @@
 package com.android.wonderrss;
 
 import android.app.Activity;
-import android.app.ListFragment;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 
 public class ListActivity extends Activity implements ArticleListFragment.OnListItemClickListener {
@@ -32,8 +26,7 @@ public class ListActivity extends Activity implements ArticleListFragment.OnList
 
 	@Override
 	public void onItemClick(int position) {
-		ArticleDetailFragment detailFragment = (ArticleDetailFragment) getFragmentManager()
-				.findFragmentById(R.id.detailfragment);
+		ArticleDetailFragment detailFragment = (ArticleDetailFragment) getFragmentManager().findFragmentById(R.id.detailfragment);
 
 		// if the fragment is not in the layout
 		// if (detailFragment == null) {

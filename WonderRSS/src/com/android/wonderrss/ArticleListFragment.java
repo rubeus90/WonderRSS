@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.KeyEvent;
@@ -145,7 +146,7 @@ public class ArticleListFragment extends ListFragment {
 				Toast.makeText(getActivity(), "No internet connection!", Toast.LENGTH_SHORT).show();
 			else{
 				rss = new RssService(this);
-				rss.execute(loadUrl(getActivity()));
+				rss.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, loadUrl(getActivity()));
 			}
 		}
 		catch(Exception e){
