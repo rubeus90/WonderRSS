@@ -65,16 +65,14 @@ public class ArticleListFragment extends ListFragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		//Retain the instance of the fragment
 		setRetainInstance(true);
 
-		// if (savedInstanceState != null) {
-		// url = savedInstanceState.getString("url");
-		// }
-
+		//Load the content of the stream
 		fetchFeed();
 
-		keyboard = (InputMethodManager) getActivity().getSystemService(
-				ListActivity.INPUT_METHOD_SERVICE);
+		//Initialise the keyboard
+		keyboard = (InputMethodManager) getActivity().getSystemService(ListActivity.INPUT_METHOD_SERVICE);
 	}
 
 	@Override
@@ -92,11 +90,12 @@ public class ArticleListFragment extends ListFragment {
 		addItem = menu.findItem(R.id.action_new);
 		editURL = (EditText) addItem.getActionView();
 
+		//Listener for the ActionView
 		editURL.setOnKeyListener(new View.OnKeyListener() {
 
 			@Override
 			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				// url = editURL.getText().toString();				
+				//If the user pressed the Enter key, we reload the stream, collapse the ActionView and clear the text field
 				if (keyCode == 66) {
 					saveUrl(getActivity(), editURL.getText().toString());
 					fetchFeed();
@@ -121,24 +120,13 @@ public class ArticleListFragment extends ListFragment {
 			fetchFeed();
 			return true;
 		case R.id.action_new:
-			keyboard.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+			keyboard.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); //toggle the keyboard
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
-	// @Override
-	// protected void onRestoreInstanceState(Bundle savedInstanceState) {
-	// super.onRestoreInstanceState(savedInstanceState);
-	// url = savedInstanceState.getString("url");
-	// }
-
-	// @Override
-	// public void onSaveInstanceState(Bundle outState) {
-	// super.onSaveInstanceState(outState);
-	// outState.putString("url", url);
-	// }
-
+	//Execute the AsyncTask to load the stream
 	@SuppressWarnings("unchecked")
 	public void fetchFeed() {
 		try{
@@ -146,7 +134,7 @@ public class ArticleListFragment extends ListFragment {
 				Toast.makeText(getActivity(), "No internet connection!", Toast.LENGTH_SHORT).show();
 			else{
 				rss = new RssService(this);
-				rss.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, loadUrl(getActivity()));
+				rss.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, loadUrl(getActivity())); //possibility to execute AsyncTasks in parallel
 			}
 		}
 		catch(Exception e){
@@ -154,6 +142,7 @@ public class ArticleListFragment extends ListFragment {
 		}
 	}
 
+	//Check if the device is connected to the internet
 	public boolean isConnectedToInternet() {
 		ConnectivityManager connectivity = (ConnectivityManager) getActivity()
 				.getSystemService(ListActivity.CONNECTIVITY_SERVICE);
@@ -168,6 +157,7 @@ public class ArticleListFragment extends ListFragment {
 		return false;
 	}
 
+	//Save the URL to SharedPreferences
 	public void saveUrl(Context context, String url) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		Editor edit = prefs.edit();
@@ -175,12 +165,14 @@ public class ArticleListFragment extends ListFragment {
 		edit.commit();
 	}
 
+	//Retrieve the URL from SharedPreferences
 	public Map<String, ?> loadUrl(Context context) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		Map<String, ?> map = prefs.getAll();
 		return map;
 	}
 	
+	//Clear all the URLs saved in SharedPreferences
 	public void deleteUrl(Context context){
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
 		Editor edit = prefs.edit();
@@ -188,6 +180,7 @@ public class ArticleListFragment extends ListFragment {
 		edit.commit();
 	}
 
+	//We dismiss the ProgressBar when the fragment is detached from the activity (eg: on orientation change, the activity is destroyed)
 	@Override
 	public void onDetach() {
 		super.onDetach();

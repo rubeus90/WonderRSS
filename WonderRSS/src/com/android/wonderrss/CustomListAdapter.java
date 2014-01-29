@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+//Custom Adapter for the article list : for each row : an image + article's title + date + author
 public class CustomListAdapter extends BaseAdapter{
 	private List<HashMap<String, Object>> map;
 	private LayoutInflater inflater;
@@ -39,17 +40,31 @@ public class CustomListAdapter extends BaseAdapter{
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		View view=convertView;
-        if(convertView==null)
+		
+		//If there's no view converted, we inflate the layout
+        if(convertView==null){
             view = inflater.inflate(R.layout.list_row, null);
+            CacheView cache = new CacheView();
+            cache.title = (TextView) view.findViewById(R.id.list_title);
+            cache.dateAuthor = (TextView) view.findViewById(R.id.list_date);
+            cache.thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+            view.setTag(cache);
+        }
         
-        ImageView thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
-        TextView title = (TextView) view.findViewById(R.id.list_title);
-        TextView dateAuthor = (TextView) view.findViewById(R.id.list_date);
+        //Retrive the items from cache
+        CacheView cache = (CacheView) view.getTag();
         
-        title.setText((String)map.get(position).get("title"));
-        dateAuthor.setText((String)map.get(position).get("date"));
-        thumbnail.setImageBitmap((Bitmap) map.get(position).get("image"));
+        cache.title.setText((String)map.get(position).get("title"));
+        cache.dateAuthor.setText((String)map.get(position).get("date"));
+        cache.thumbnail.setImageBitmap((Bitmap) map.get(position).get("image"));
         
 		return view;
+	}
+	
+	//Cache
+	private static class CacheView{
+		public TextView title;
+		public TextView dateAuthor;
+		public ImageView thumbnail;
 	}
 }

@@ -28,6 +28,7 @@ public class ArticleDetailFragment extends Fragment {
 	ImageView thumbnail;
 	View view;
 
+	//Constructor
 	public ArticleDetailFragment() {
 		setHasOptionsMenu(true);
 		setRetainInstance(false);
@@ -45,6 +46,8 @@ public class ArticleDetailFragment extends Fragment {
 		thumbnail = (ImageView) view.findViewById(R.id.image);
 		
 		int position = 0;
+		
+		//Load the content of the matching article
 		try{
 			Bundle bundle = getActivity().getIntent().getExtras();
 			position = bundle.getInt("position");
@@ -54,6 +57,7 @@ public class ArticleDetailFragment extends Fragment {
 			e.getStackTrace();
 		}
 		
+		//Open the article in the browser (via an intent)
 		title.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -74,34 +78,37 @@ public class ArticleDetailFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 	}
 	
+	//Load the content of an article
 	public void updateContent(int position){		
 		article = RssService.stream.getListe().get(position);
 		
 		title.setText(article.getTitle());
 		date.setText(article.getPubDate());	
 		
-		//Supprimer tous les images dans le code HTML
-//		String htmlBody = article.getContent().replaceAll("<img.+/(img)*>", "");	
+		//Delete all the image tags in the HTML code	
 		String htmlBody = article.getContent().replaceAll("<img.+?>", "");
 		try{
 			content.setText(Html.fromHtml(htmlBody));
-//			content.setText(htmlBody);
 			
-			content.setMovementMethod(LinkMovementMethod.getInstance()); //pour que les liens deviennent cliquables
+			content.setMovementMethod(LinkMovementMethod.getInstance()); //links included in the HTML become clickable
 		}
 		catch(Exception e){
 			e.getStackTrace();
 			Log.e("ArticleDetailFragment", "Erreur transformer le code HTML en texte");
 			content.setText("An error has occured. No content has been downloaded.");
 		}
+		
+		//Launch the AsyncTask to load the thumbnail images
 		thumbnail.setImageBitmap(null);
 		new GetImage().execute(article.getImageUrl());
 	}
 	
+	//Inner class to load the images
 	private class GetImage extends AsyncTask<String, Void, Bitmap>{
 
 		@Override
 		protected Bitmap doInBackground(String... params) {
+			Log.v("Article Image Service", "doInBackground : retrieve the article's image");
 			try {
 				URL url = new URL(params[0]);
 				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -113,16 +120,16 @@ public class ArticleDetailFragment extends Fragment {
 				return myBitmap;
 			} catch (IOException e) {
 				e.printStackTrace();
-				Log.e("ArticleDetailFragment",
-						"Probleme recuperer le bitmap a partir du URL");
+				Log.e("Article Image Service", "Retrieving article's image failed");
 				return null;
 			}
 		}
 
 		@Override
 		protected void onPostExecute(Bitmap result) {
-			super.onPostExecute(result);
+			Log.v("Article Image Service", "onPostExecute : assign the image download as thumbnail image for the article");
 			
+			super.onPostExecute(result);			
 			thumbnail.setImageBitmap(result);
 		}
 		

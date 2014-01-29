@@ -17,6 +17,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
+//AsyncTask class to load the RSS stream
 public class RssService	extends AsyncTask<Map<String,?>, Void, Feed> {
 	
 	private Activity activity;
@@ -35,47 +36,23 @@ public class RssService	extends AsyncTask<Map<String,?>, Void, Feed> {
 		activity = fragment.getActivity();
 	}
 
+	//Show a ProgressDialog to notify the user that the stream is being loaded
 	public void onPreExecute() {
-		Log.v("Rss Service", "onPreExecute");		
+		Log.v("Rss Service", "onPreExecute : ProgressDialog");		
 		progress = new ProgressDialog(activity);
 		progress.setMessage(activity.getResources().getString(R.string.downloading));
 		progress.show();
 	}
-
-	public void onPostExecute(final Feed feed) {
-		Log.v("Rss Service", "onPostExecute");
-				
-		List<FeedArticle> list = feed.getListe();					
-		HashMap<String, Object> map;
-		List<HashMap<String, Object>> listMap = new ArrayList<HashMap<String, Object>>();
-		
-		/****On ajoute les proprietes de chaque article dans un HashMap*****/
-		for (final FeedArticle article : list) {					
-			map = new HashMap<String, Object>();
-			map.put("title", article.getTitle());
-			map.put("date", article.getPubDate() + " by " + article.getAuthor());
-			
-			listMap.add(map);
-		}
-		adapter = new CustomListAdapter(activity, listMap);
-		fragment.setListAdapter(adapter);	
-		Log.v("Rss Service", "On ajoute l'adapter au fragment");
-		
-		if(progress != null)
-			progress.dismiss();
-		
-		/***** On lance le AsyncTask pour telecharger des images *********/
-		ImageService imageService = new ImageService(adapter, listMap);
-		imageService.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feed);
-	}
-
+	
 	@Override
 	protected Feed doInBackground(Map<String,?>... arg0) {
-		stream = new Feed();
+		Log.v("Rss Service", "doInBackground : retrieve the XML");	
 		
-		Log.v("Rss Service", "On commence a recuperer le XML");		
+		stream = new Feed();			
 		try {
 			URL url = null;
+			
+			//We retrieve each RSS source, then we add all their articles to our stream
 			for (Map.Entry<String, ?> entry : arg0[0].entrySet()) {		
 				if(entry.getKey() != null){
 					url= new URL(entry.getValue().toString());
@@ -94,17 +71,44 @@ public class RssService	extends AsyncTask<Map<String,?>, Void, Feed> {
 				}
 			}
             
-            Log.v("Rss Service", "On a reussi a recuperer le XML");
-            
-            Log.v("Rss Service", "On recupere les images des articles");
-//            setArticleImage();
-            Log.v("Rss Service", "Les images des articles ont ete recuperees");
+            Log.v("Rss Service", "Finish doInBackground");
             
             return stream;
         } catch (Exception e) {
         	e.printStackTrace();
-        	Log.e("Rss Service", "On a pas reussi a recuperer le XML");
+        	Log.e("Rss Service", "doInBackground : retrieving XML failed");
             return stream;
         }
+	}
+
+	//Populate the list using our CustomAdapter
+	public void onPostExecute(final Feed feed) {
+		Log.v("Rss Service", "Start onPostExecute");
+				
+		List<FeedArticle> list = feed.getListe();					
+		HashMap<String, Object> map;
+		List<HashMap<String, Object>> listMap = new ArrayList<HashMap<String, Object>>();
+		
+		//Add all proprieties of an article in an HashMap
+		for (final FeedArticle article : list) {					
+			map = new HashMap<String, Object>();
+			map.put("title", article.getTitle());
+			map.put("date", article.getPubDate() + " by " + article.getAuthor());
+			
+			listMap.add(map);
+		}
+		//Pass this list to our CustomAdapter
+		adapter = new CustomListAdapter(activity, listMap);
+		fragment.setListAdapter(adapter);	
+		Log.v("Rss Service", "onPostExecute : CustomAdapter added to the fragment");
+		
+		//Dismiss the ProgressDialog
+		if(progress != null)
+			progress.dismiss();
+		
+		//Launch the 2nd AsyncTask to retrieve all the images
+		Log.v("Rss Service", "Launch the 2nd AsyncTask to retrieve the images");
+		ImageService imageService = new ImageService(adapter, listMap);
+		imageService.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, feed);
 	}
 }

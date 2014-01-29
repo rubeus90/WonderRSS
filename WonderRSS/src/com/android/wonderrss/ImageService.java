@@ -15,6 +15,7 @@ import android.text.Html;
 import android.text.Html.ImageGetter;
 import android.util.Log;
 
+//AsyncTask class to download the thumbnail image of each article
 public class ImageService extends AsyncTask<Feed, Integer, Void> {
 	
 	private boolean boo = false;
@@ -29,21 +30,21 @@ public class ImageService extends AsyncTask<Feed, Integer, Void> {
 
 	@Override
 	protected Void doInBackground(Feed... params) {
-		Log.i("AsyncTask image", "doInBackground");
+		Log.v("Image Service", "Start doInBackground");
 		int counter = -1;
 		feed = params[0];
 		for (final FeedArticle article : feed.getListe()) {
 			boo = false;
 			counter++;
 
-			// Si le XML n'a pas de champ "enclosure" et le lien de l'image est
-			// contenu dans le HTML
+			//XML doesn't have a "enclosure" tag -> the image's URL is included in the HTML
 			if (article.getImageUrl() == null) {
-				// On recupere l'image de l'article avec le lien dans le content
+				// We retrieve the article with the URL included in the HTML
 				String htmlBody = article.getContent();
 				Html.fromHtml(htmlBody, new ImageGetter() {
 					@Override
 					public Drawable getDrawable(String src) {
+						//Use a boolean to retrieve just the first image of each article
 						if (!boo) {
 							if (src.contains(".png") || src.contains(".jpg")) {
 								article.setImageUrl(src);
@@ -59,23 +60,27 @@ public class ImageService extends AsyncTask<Feed, Integer, Void> {
 				}, null);
 
 			}
-			// Si le XML a un champ "enclosure" qui contient le lien de l'image
+			// If the image's URL is included in the "enclosure" tag
 			else {
 				article.setImage(getBitmapFromURL(article.getImageUrl()));
 			}
+			
+			//Show each image once it's loaded
 			publishProgress(counter);
 		}
 		return null;
 	}
 	
+	//Add the image loaded to the list and notify our CustomAdapter
 	@Override
 	protected void onProgressUpdate(Integer... values) {
-		Log.i("AsyncTask image", "onProgressUpdate");
+		Log.i("AsyncTask image", "onProgressUpdate : new image loaded");
 		super.onProgressUpdate(values);
 		map.get(values[0]).put("image", feed.getListe().get(values[0]).getImage());
 		adapter.notifyDataSetChanged();
 	}
 
+	//Calculate the size of the image to be loaded (prevent memory leak due to large bitmap loading)
 	public static int calculateInSampleSize(BitmapFactory.Options options,
 			int reqWidth, int reqHeight) {
 		// Raw height and width of image
@@ -88,8 +93,7 @@ public class ImageService extends AsyncTask<Feed, Integer, Void> {
 			final int halfHeight = height / 2;
 			final int halfWidth = width / 2;
 
-			// Calculate the largest inSampleSize value that is a power of 2 and
-			// keeps both
+			// Calculate the largest inSampleSize value that is a power of 2 and keeps both
 			// height and width larger than the requested height and width.
 			while ((halfHeight / inSampleSize) > reqHeight
 					&& (halfWidth / inSampleSize) > reqWidth) {
@@ -100,6 +104,7 @@ public class ImageService extends AsyncTask<Feed, Integer, Void> {
 		return inSampleSize;
 	}
 
+	//Load the bitmap in the size calculated
 	public static Bitmap decodeSampledBitmapFromUrl(URL url, int reqWidth,
 			int reqHeight) {
 		HttpURLConnection connection;
@@ -129,19 +134,21 @@ public class ImageService extends AsyncTask<Feed, Integer, Void> {
 			return BitmapFactory.decodeStream(input, null, options);
 		} catch (IOException e) {
 			e.printStackTrace();
+			Log.e("ImageService", "Failed to decode the bitmap with the size selected");
 		}
 		return null;
 	}
 
+	//Retrive the bitmap from its URL (in sample size calculated)
 	public Bitmap getBitmapFromURL(String src) {
+		Log.v("Image Service", "Decode image to bitmap");
 		try {
 			URL url = new URL(src);
 			Bitmap myBitmap = decodeSampledBitmapFromUrl(url, 150, 150);
 			return myBitmap;
 		} catch (IOException e) {
 			e.printStackTrace();
-			Log.e("ImageService",
-					"Probleme recuperer le bitmap a partir du URL");
+			Log.e("ImageService", "Decoding image to bitmap failed");
 			return null;
 		}
 	}

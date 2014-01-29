@@ -37,9 +37,6 @@ public class RssParser extends DefaultHandler{
 		else if(localName.equalsIgnoreCase("pubDate") || localName.equalsIgnoreCase("published")){
 			currentArticle.setPubDate(buffer.toString());
 		}
-		else if(localName.equalsIgnoreCase("guid")){
-			currentArticle.setGuid(buffer.toString());
-		}
 		else if(localName.equalsIgnoreCase("content") || localName.equalsIgnoreCase("description")){
 			currentArticle.setContent(buffer.toString());
 		}

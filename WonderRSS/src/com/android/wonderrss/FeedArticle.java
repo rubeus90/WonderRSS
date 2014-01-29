@@ -6,7 +6,6 @@ public class FeedArticle {
 	private String title;
 	private String author;
 	private String pubDate;
-	private String guid;
 	private String content;
 	private String url;
 	private String imageUrl;
@@ -47,12 +46,6 @@ public class FeedArticle {
 	}
 	public void setPubDate(String pubDate) {
 		this.pubDate = pubDate;
-	}
-	public String getGuid() {
-		return guid;
-	}
-	public void setGuid(String guid) {
-		this.guid = guid;
 	}
 	public String getContent() {
 		return content;
