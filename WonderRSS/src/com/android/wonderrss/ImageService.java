@@ -74,7 +74,7 @@ public class ImageService extends AsyncTask<Feed, Integer, Void> {
 	//Add the image loaded to the list and notify our CustomAdapter
 	@Override
 	protected void onProgressUpdate(Integer... values) {
-		Log.i("AsyncTask image", "onProgressUpdate : new image loaded");
+		Log.i("Image Service", "onProgressUpdate : new image loaded");
 		super.onProgressUpdate(values);
 		map.get(values[0]).put("image", feed.getListe().get(values[0]).getImage());
 		adapter.notifyDataSetChanged();
@@ -134,7 +134,7 @@ public class ImageService extends AsyncTask<Feed, Integer, Void> {
 			return BitmapFactory.decodeStream(input, null, options);
 		} catch (IOException e) {
 			e.printStackTrace();
-			Log.e("ImageService", "Failed to decode the bitmap with the size selected");
+			Log.e("Image Service", "Failed to decode the bitmap with the size selected");
 		}
 		return null;
 	}
@@ -148,7 +148,7 @@ public class ImageService extends AsyncTask<Feed, Integer, Void> {
 			return myBitmap;
 		} catch (IOException e) {
 			e.printStackTrace();
-			Log.e("ImageService", "Decoding image to bitmap failed");
+			Log.e("Image Service", "Decoding image to bitmap failed");
 			return null;
 		}
 	}
