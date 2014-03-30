@@ -1,7 +1,11 @@
-package com.android.wonderrss;
+package com.android.wonderrss.Adapter;
 
 import java.util.HashMap;
 import java.util.List;
+
+import com.android.wonderrss.R;
+import com.android.wonderrss.R.id;
+import com.android.wonderrss.R.layout;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -2,6 +2,8 @@ package com.android.wonderrss;
 
 import java.util.Map;
 
+import com.android.wonderrss.Task.RssService;
+
 import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.android.wonderrss;
+package com.android.wonderrss.Entities;
 
 import java.net.URL;
 import java.util.ArrayList;

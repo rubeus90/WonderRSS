@@ -1,4 +1,4 @@
-package com.android.wonderrss;
+package com.android.wonderrss.Task;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,6 +6,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
+
+import com.android.wonderrss.Adapter.CustomListAdapter;
+import com.android.wonderrss.Entities.Feed;
+import com.android.wonderrss.Entities.FeedArticle;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

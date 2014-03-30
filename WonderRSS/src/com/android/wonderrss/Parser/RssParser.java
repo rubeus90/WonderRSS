@@ -1,8 +1,11 @@
-package com.android.wonderrss;
+package com.android.wonderrss.Parser;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
+
+import com.android.wonderrss.Entities.Feed;
+import com.android.wonderrss.Entities.FeedArticle;
 
 public class RssParser extends DefaultHandler{
 	

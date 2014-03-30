@@ -5,6 +5,9 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.android.wonderrss.Entities.FeedArticle;
+import com.android.wonderrss.Task.RssService;
+
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;

@@ -1,4 +1,4 @@
-package com.android.wonderrss;
+package com.android.wonderrss.Task;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -17,6 +17,13 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.android.wonderrss.ArticleListFragment;
+import com.android.wonderrss.R;
+import com.android.wonderrss.Adapter.CustomListAdapter;
+import com.android.wonderrss.Entities.Feed;
+import com.android.wonderrss.Entities.FeedArticle;
+import com.android.wonderrss.Parser.RssParser;
+
 //AsyncTask class to load the RSS stream
 public class RssService	extends AsyncTask<Map<String,?>, Void, Feed> {
 	
@@ -24,7 +31,7 @@ public class RssService	extends AsyncTask<Map<String,?>, Void, Feed> {
 	private ArticleListFragment fragment;
 	private RssParser theRSSHandler;
 	private CustomListAdapter adapter;
-	static Feed stream;
+	public static Feed stream;
 	private ProgressDialog progress;
 
 	public ProgressDialog getProgress() {
