@@ -2,8 +2,6 @@ package com.android.wonderrss;
 
 import java.util.Map;
 
-import com.android.wonderrss.Task.RssService;
-
 import android.app.Activity;
 import android.app.ListFragment;
 import android.content.Context;
@@ -14,6 +12,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -23,8 +22,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.wonderrss.Parallax.ParallaxListView;
+import com.android.wonderrss.Task.RssService;
 
 public class ArticleListFragment extends ListFragment {
 	private RssService rss;
@@ -32,6 +36,7 @@ public class ArticleListFragment extends ListFragment {
 	private MenuItem addItem;
 	private InputMethodManager keyboard;
 	private OnListItemClickListener listener;
+	private ParallaxListView listView;
 
 	public interface OnListItemClickListener {
 		public void onItemClick(int position);
@@ -59,8 +64,22 @@ public class ArticleListFragment extends ListFragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
-		return inflater.inflate(R.layout.article_list_fragment, container,
-				false);
+		View view = inflater.inflate(R.layout.article_list_fragment, container,false);
+		
+		listView = (ParallaxListView) view.findViewById(R.id.list_view);
+		
+//		TextView header = new TextView(this.getActivity());
+//		header.setText("Hey");
+//		header.setGravity(Gravity.CENTER);
+//		header.setTextSize(40);
+//		header.setHeight(200);
+		
+		ImageView header = new ImageView(this.getActivity());
+		header.setImageResource(R.drawable.rss);
+		
+		listView.addParallaxHeaderView(header);
+		
+		return view;
 	}
 
 	@Override
@@ -74,14 +93,14 @@ public class ArticleListFragment extends ListFragment {
 		fetchFeed();
 
 		//Initialise the keyboard
-		keyboard = (InputMethodManager) getActivity().getSystemService(ListActivity.INPUT_METHOD_SERVICE);
+		keyboard = (InputMethodManager) getActivity().getSystemService(ListActivity.INPUT_METHOD_SERVICE);		
 	}
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 
-		listener.onItemClick(position);
+		listener.onItemClick(position-1);
 	}
 
 	@Override
@@ -114,17 +133,17 @@ public class ArticleListFragment extends ListFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle presses on the action bar items
 		switch (item.getItemId()) {
-		case R.id.action_remove:
-			deleteUrl(getActivity());
-			fetchFeed();
-			return true;
-		case R.id.action_refresh:
-			fetchFeed();
-			return true;
-		case R.id.action_new:
-			keyboard.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); //toggle the keyboard
-		default:
-			return super.onOptionsItemSelected(item);
+			case R.id.action_remove:
+				deleteUrl(getActivity());
+				fetchFeed();
+				return true;
+			case R.id.action_refresh:
+				fetchFeed();
+				return true;
+			case R.id.action_new:
+				keyboard.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0); //toggle the keyboard
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
