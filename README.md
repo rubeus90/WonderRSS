@@ -1,6 +1,7 @@
 # WonderRss
 
-A simple RSS reader for Android 3.x and more. This application is initially madeas part of a small programming project at ESIEE Paris engineering school.
+A simple RSS reader for Android 3.x or above. 
+This application is initially made as part of a small programming project at ESIEE Paris engineering school.
 
 <p align="center">
 <img src="https://raw.github.com/rubeus90/wonder-rss/master/viewNexus.png" width="310" />&nbsp;
@@ -14,4 +15,3 @@ A simple RSS reader for Android 3.x and more. This application is initially made
 
 ## Authors 
 * NGUYEN Hong Ngoc 
-* PATOIS Thibault
